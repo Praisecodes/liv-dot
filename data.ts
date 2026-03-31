@@ -13,8 +13,8 @@ export const EVENTS: IEvent[] = [
   },
   {
     name: "Music Festival 2026",
-    startDate: "2026-10-20T12:00:00Z",
-    endDate: "2026-10-20T23:00:00Z",
+    startDate: "2026-03-20T12:00:00Z",
+    endDate: "2026-03-20T23:00:00Z",
     location: "Austin, TX",
     description: "Experience live music from top artists around the world.",
     thumbnail: "https://example.com/event2.jpg",

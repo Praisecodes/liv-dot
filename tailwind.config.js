@@ -15,7 +15,7 @@ module.exports = {
       "primary-a70": "#1B68DCB2",
       "primary-a80": "#1B68DCCC",
       "primary": "#1B68DC",
-      "bg": "#F3F3F3",
+      "bg": "#F5F5F5",
       "white-a3": '#FFFFFF08',
       "white-a5": "#FFFFFF0D",
       "white-a10": "#FFFFFF1A",
