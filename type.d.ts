@@ -1,17 +1,12 @@
-interface IUser {
-
-}
-
-interface IUserPreferences {
-
-}
-
-interface IAdminSettings {
-
-}
-
-interface IErrorResponse {
-  message: string;
-  data: any;
-  status: string;
+interface IEvent {
+  name: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  description: string;
+  thumbnail: string;
+  liveStreamUrl: string;
+  paymentStatus: 'paid' | 'unpaid' | 'pending';
+  isOffline: boolean;
+  replayAvailable: boolean;
 }

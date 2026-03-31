@@ -17,6 +17,7 @@
     "@react-navigation/native": "^7.1.6",
     "@tanstack/react-query": "^5.90.21",
     "axios": "^1.13.6",
+    "date-fns": "^4.1.0",
     "expo": "~55.0.9",
     "expo-blur": "~55.0.10",
     "expo-constants": "~55.0.7",

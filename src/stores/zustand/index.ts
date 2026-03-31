@@ -1,8 +1,6 @@
-import useAppSettings from "./app_settings";
-import useCreateBookingStore from "./create_booking";
-import useUserStore from "./user_store";
+import useEventDetails from "./event_details";
 
 export {
-  useAppSettings, useCreateBookingStore, useUserStore
+  useEventDetails
 };
 
