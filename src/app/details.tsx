@@ -21,8 +21,6 @@ const Details = () => {
   const SHOW_STARTED = useMemo(() => {
     const showStarted = (differenceInMinutes(new Date(), details?.startDate ?? new Date()) >= 0) && !EVENT_PAST;
 
-    console.log("Show's Started:", showStarted);
-
     return showStarted;
   }, [details, EVENT_PAST]);
 

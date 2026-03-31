@@ -31,7 +31,7 @@ const EventCard: React.FC<Props> = ({ event, onPress }) => {
   return (
     <TouchableOpacity onPress={handleCardPressed}>
       <View className={`w-full overflow-hidden bg-white`} style={[styles.container]}>
-        <View style={[styles.thumbnail]}></View>
+        <View className={`bg-black-a10`} style={[styles.thumbnail]}></View>
 
         <View
           className={`flex flex-row items-center border-t border-t-black-a10`}
