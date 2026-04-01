@@ -1,40 +1,54 @@
-# Welcome to your Expo app 👋
+# LIV DOT – Event Viewer Flow (React Native)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This project is a simplified implementation of an event viewing flow for LIV DOT’s mobile application. It demonstrates how a viewer interacts with an event, including access control, event status handling, and network-aware UI states.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
 
-   ```bash
-   npm install
-   ```
+The application handles the following states:
 
-2. Start the app
+- [x] Loading event details
+- [x] User has not purchased access
+- [x] Payment/access is pending verification
+- [x] Event is upcoming
+- [x] Event is live and available to watch
+- [x] Event is offline or unavailable
+- [x] Replay is available
+- [x] Device is offline / request failed
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🧠 Approach
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+The application is built with a **state-driven UI approach**, where the UI is derived from a combination of:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Event data (mocked)
+- Payment status
+- Time-based conditions (start/end date)
+- Network state (NetInfo)
+- Request state (React Query)
 
-## Learn more
+Instead of relying on scattered conditional logic, the system derives a **single event view state**, which determines what the user sees and can do.
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🏗️ Tech Stack
 
-## Join the community
+- React Native (Expo)
+- TypeScript
+- Expo Router
+- Zustand (local UI state)
+- TanStack Query (server state simulation)
+- NetInfo (network detection)
+- date-fns (date handling)
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 📦 Setup Instructions
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Praisecodes/liv-dot.git
+cd liv-dot
