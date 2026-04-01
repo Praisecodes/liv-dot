@@ -1,6 +1,6 @@
-import { differenceInMinutes, format } from 'date-fns';
+import { format } from 'date-fns';
 import { router } from 'expo-router';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, HText, Text } from '../components/common';
 import { getMetrics } from '../helpers/utils';
@@ -10,45 +10,57 @@ import { useEventDetails } from '../stores/zustand';
 const Details = () => {
   const { details, clearDetails } = useEventDetails();
 
-  const PAYMENT_STATUS = useMemo(() => (
-    details?.paymentStatus ?? "unpaid"
-  ), [details]);
+  const getEventState = (event: IEvent | null): EventViewState => {
+    if (event?.isOffline ?? false) return "OFFLINE";
 
-  const EVENT_PAST = useMemo(() => (
-    differenceInMinutes(details?.endDate ?? new Date().toISOString(), new Date().toISOString()) <= 0
-  ), [details]);
+    if ((event?.paymentStatus ?? "unpaid") === "unpaid") return "NOT_PURCHASED";
+    if ((event?.paymentStatus ?? "unpaid") === "pending") return "PENDING";
 
-  const SHOW_STARTED = useMemo(() => {
-    const showStarted = (differenceInMinutes(new Date(), details?.startDate ?? new Date()) >= 0) && !EVENT_PAST;
+    const now = new Date();
+    const start = !!event?.startDate ? new Date(event.startDate) : new Date();
+    const end = !!event?.endDate ? new Date(event.endDate) : new Date();
 
-    return showStarted;
-  }, [details, EVENT_PAST]);
+    if (now < start) return "UPCOMING";
+    if (now >= start && now <= end) return "LIVE";
 
-  const REPLAY_AVAILABLE = useMemo(() => (
-    details?.replayAvailable ?? false
-  ), [details])
+    if (event?.replayAvailable ?? false) return "REPLAY";
 
-  const BTN_TEXT = useMemo(() => {
-    if (EVENT_PAST && !REPLAY_AVAILABLE) {
-      return "This Show Is No Longer Available"
-    } else {
-      switch (PAYMENT_STATUS) {
-        case "paid": {
-          if (EVENT_PAST && REPLAY_AVAILABLE) {
-            return "Replay This Event";
-          } else if (!SHOW_STARTED) {
-            return "This Show Hasn't Started Yet";
-          } else {
-            return "Watch Live Event";
-          }
-        }
-        case "pending":
-          return "We're Confirming Your Payment";
-        case "unpaid":
-          return "Pay For This Event"
-      }
-    }
-  }, [REPLAY_AVAILABLE, PAYMENT_STATUS, EVENT_PAST]);
+    return "ENDED";
+  };
+
+  const STATE_CONFIG = {
+    NOT_PURCHASED: {
+      text: "Pay For This Event",
+      disabled: false,
+    },
+    PENDING: {
+      text: "We're Confirming Your Payment",
+      disabled: true,
+    },
+    UPCOMING: {
+      text: "This Show Hasn't Started Yet",
+      disabled: true,
+    },
+    LIVE: {
+      text: "Watch Live Event",
+      disabled: false,
+    },
+    REPLAY: {
+      text: "Replay This Event",
+      disabled: false,
+    },
+    ENDED: {
+      text: "This Show Is No Longer Available",
+      disabled: true,
+    },
+    OFFLINE: {
+      text: "This Event Is Only Available Offline",
+      disabled: true,
+    },
+  };
+
+  const state = getEventState(details);
+  const config = STATE_CONFIG[state];
 
   const handleButtonPressed = () => { }
 
@@ -82,11 +94,19 @@ const Details = () => {
         </Text>
 
         <View className={`mt-3`}>
-          <Button
-            text={BTN_TEXT}
-            onPress={handleButtonPressed}
-            disabled={PAYMENT_STATUS === "pending" || !SHOW_STARTED || (EVENT_PAST && !REPLAY_AVAILABLE)}
-          />
+          {state !== "OFFLINE" && (
+            <Button
+              text={config.text}
+              onPress={handleButtonPressed}
+              disabled={config.disabled}
+            />
+          )}
+
+          {state === "OFFLINE" && (
+            <Text className={`text-center text-[#FF0000]`} size='13'>
+              Unfortunately, this event is only available offline
+            </Text>
+          )}
         </View>
       </ScrollView>
     </MainLayout>

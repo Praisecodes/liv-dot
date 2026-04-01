@@ -10,3 +10,12 @@ interface IEvent {
   isOffline: boolean;
   replayAvailable: boolean;
 }
+
+type EventViewState =
+  | "NOT_PURCHASED"
+  | "PENDING"
+  | "UPCOMING"
+  | "LIVE"
+  | "REPLAY"
+  | "ENDED"
+  | "OFFLINE";
