@@ -52,3 +52,61 @@ Instead of relying on scattered conditional logic, the system derives a **single
 ```bash
 git clone https://github.com/Praisecodes/liv-dot.git
 cd liv-dot
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+or 
+
+```bash
+yarn
+```
+
+### 3. Start the development server
+
+```bash
+npx expo start -c
+```
+
+### 4. Run the app
+
+- Press `i` for iOS simulator
+- Press `a` from Android emulator
+- Or scan the QR code using Expo Go
+
+### Project Structure
+
+```
+src/
+  app/                # Screens (Expo Router)
+  components/         # Reusable UI components
+  hooks/              # Custom hooks (network, queries)
+  services/           # Mock API layer
+  stores/             # Zustand state, Async storage, Expo-secure store
+  helpers/            # Utility functions
+data.ts             # Mock event data
+```
+
+### State Handling
+The UI is driven by a derived state that considers:
+- Payment status (`paid`, `pending`, `unpaid`)
+- Event timing (upcoming, live, ended)
+- Replay availability
+- Network connectivity
+- Request success/failure
+
+This ensure:
+- Predictable UI behavior
+- Clear separation of concerns
+- Easy extensiblity
+
+### Network Handling
+- Uses NetInfo to detect connectivity
+- Differentiates between:
+   - Device offline
+   - Request failure
+- Provides retry mechanisms for failed requests
