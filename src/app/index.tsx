@@ -1,11 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
+import { Image } from "expo-image";
 import { useCallback } from "react";
 import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { EventCard, HText, Text } from "../components/common";
 import { getEvents, getMetrics } from "../helpers/utils";
+import { useNetworkStatus } from "../hooks";
 import MainLayout from "../layouts/main_layout";
 
 export default function Index() {
+  const { isOffline } = useNetworkStatus();
+
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["get_events"],
     queryFn: getEvents,
@@ -19,7 +23,24 @@ export default function Index() {
           Events
         </HText>
 
-        {(isLoading) && (
+        {isOffline && (
+          <View style={{ gap: getMetrics(13) }} className={`flex py-32 items-center justify-center`}>
+            <Image
+              source={require("@/assets/images/no-internet.png")}
+              style={{
+                width: getMetrics(270),
+                height: getMetrics(270),
+              }}
+              contentFit="contain"
+            />
+
+            <Text className={`text-black-a80 text-center`} size="15">
+              We're having troubles connecting.{"\n"}Please check your internet connection and try again.
+            </Text>
+          </View>
+        )}
+
+        {(isLoading && !isOffline) && (
           <View style={{ gap: getMetrics(13) }} className={`flex py-32 items-center justify-center`}>
             <ActivityIndicator color={"black"} />
 
@@ -29,7 +50,7 @@ export default function Index() {
           </View>
         )}
 
-        {(!isLoading && isError) && (
+        {(!isLoading && !isOffline && isError) && (
           <View style={{ gap: getMetrics(13) }} className={`flex py-32 items-center justify-center`}>
             <Text className={`text-black-a80 text-center`} size="18">
               Oops! We've encountered an error getting events{"\n"}Please refresh

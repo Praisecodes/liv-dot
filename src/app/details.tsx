@@ -1,14 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, HText, Text } from '../components/common';
 import { getEventById, getMetrics } from '../helpers/utils';
+import { useNetworkStatus } from '../hooks';
 import MainLayout from '../layouts/main_layout';
 
 const Details = () => {
   const { id } = useLocalSearchParams();
+  const { isOffline } = useNetworkStatus();
 
   const { data: details, isLoading, refetch, isError } = useQuery({
     queryKey: ["get_event", id],
@@ -76,7 +79,24 @@ const Details = () => {
         contentContainerStyle={styles.container}
         refreshControl={<RefreshControl onRefresh={refetch} refreshing={false} />}
       >
-        {(isLoading) && (
+        {isOffline && (
+          <View style={{ gap: getMetrics(13) }} className={`flex-1 items-center justify-center`}>
+            <Image
+              source={require("@/assets/images/no-internet.png")}
+              style={{
+                width: getMetrics(270),
+                height: getMetrics(270),
+              }}
+              contentFit="contain"
+            />
+
+            <Text className={`text-black-a80 text-center`} size="15">
+              We're having troubles connecting.{"\n"}Please check your internet connection and try again.
+            </Text>
+          </View>
+        )}
+
+        {(isLoading && !isOffline) && (
           <View className={`flex-1 items-center justify-center`} style={{ gap: getMetrics(13) }}>
             <ActivityIndicator color={"black"} />
 
@@ -86,7 +106,7 @@ const Details = () => {
           </View>
         )}
 
-        {(!isLoading && isError) && (
+        {(!isLoading && !isOffline && isError) && (
           <View style={{ gap: getMetrics(13) }} className={`flex-1 items-center justify-center`}>
             <Text className={`text-black-a80 text-center`} size="18">
               Oops! We've encountered an error getting event details{"\n"}Please refresh
