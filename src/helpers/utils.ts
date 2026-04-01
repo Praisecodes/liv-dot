@@ -1,3 +1,4 @@
+import { EVENTS } from "@/data";
 import { QueryClient } from "@tanstack/react-query";
 import { Dimensions, PixelRatio, Platform } from "react-native";
 
@@ -34,9 +35,41 @@ const queryClient = new QueryClient();
 
 const runOnLoad = async () => { }
 
+const getEvents = async (): Promise<IEvent[]> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const shouldFail = Math.random() < 0.1;
+
+      if (shouldFail) {
+        reject(new Error("Failed to fetch events"));
+      } else {
+        resolve(EVENTS);
+      }
+    }, 1500);
+  });
+};
+
+const getEventById = async (id: string): Promise<IEvent> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const shouldFail = Math.random() < 0.1;
+      const event = EVENTS.find(e => e.id === id);
+
+      if (!event) {
+        reject(new Error("Event not found"));
+      } else if (shouldFail) {
+        reject(new Error("Failed to fetch event details"))
+      } else {
+        resolve(event);
+      }
+    }, 1200);
+  });
+};
+
 export {
-  getMetrics,
+  getEventById, getEvents, getMetrics,
   queryClient,
   runOnLoad,
   WIDTH
 };
+

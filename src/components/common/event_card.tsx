@@ -24,7 +24,10 @@ const EventCard: React.FC<Props> = ({ event, onPress }) => {
     // navigate to event details screen
     setDetails(event);
     router.navigate({
-      pathname: "/details"
+      pathname: "/details",
+      params: {
+        id: event.id
+      }
     });
   };
 

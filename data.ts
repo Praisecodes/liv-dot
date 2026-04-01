@@ -1,5 +1,6 @@
 export const EVENTS: IEvent[] = [
   {
+    id: "ab",
     name: "Tech Conference 2026",
     startDate: "2026-04-01T09:00:00Z",
     endDate: "2026-04-01T17:00:00Z",
@@ -12,6 +13,7 @@ export const EVENTS: IEvent[] = [
     replayAvailable: true,
   },
   {
+    id: "abc",
     name: "Music Festival 2026",
     startDate: "2026-03-20T12:00:00Z",
     endDate: "2026-03-20T23:00:00Z",
@@ -24,6 +26,7 @@ export const EVENTS: IEvent[] = [
     replayAvailable: false,
   },
   {
+    id: "abcd",
     name: "Art Expo 2026",
     startDate: "2026-11-05T10:00:00Z",
     endDate: "2026-11-05T18:00:00Z",
@@ -36,6 +39,7 @@ export const EVENTS: IEvent[] = [
     replayAvailable: true,
   },
   {
+    id: "abcde",
     name: "Workshop 2026",
     startDate: "2026-12-10T09:00:00Z",
     endDate: "2026-12-10T16:00:00Z",
@@ -48,6 +52,7 @@ export const EVENTS: IEvent[] = [
     replayAvailable: true,
   },
   {
+    id: "abcdef",
     name: "Webinar 2026",
     startDate: "2026-12-20T14:00:00Z",
     endDate: "2026-12-20T15:30:00Z",

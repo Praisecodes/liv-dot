@@ -1,14 +1,20 @@
+import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { router } from 'expo-router';
-import React, { useEffect } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, HText, Text } from '../components/common';
-import { getMetrics } from '../helpers/utils';
+import { getEventById, getMetrics } from '../helpers/utils';
 import MainLayout from '../layouts/main_layout';
-import { useEventDetails } from '../stores/zustand';
 
 const Details = () => {
-  const { details, clearDetails } = useEventDetails();
+  const { id } = useLocalSearchParams();
+
+  const { data: details, isLoading, refetch, isError } = useQuery({
+    queryKey: ["get_event", id],
+    queryFn: async () => await getEventById(id as string),
+    enabled: !!id,
+  })
 
   const getEventState = (event: IEvent | null): EventViewState => {
     if (event?.isOffline ?? false) return "OFFLINE";
@@ -59,55 +65,72 @@ const Details = () => {
     },
   };
 
-  const state = getEventState(details);
+  const state = !!details ? getEventState(details) : "UPCOMING";
   const config = STATE_CONFIG[state];
 
   const handleButtonPressed = () => { }
 
-  useEffect(() => {
-    if (!details) router.back();
-
-    return () => {
-      clearDetails();
-    }
-  }, []);
-
   return (
     <MainLayout>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={[styles.header]}>
-          <HText size='header1'>
-            {details?.name ?? ""}
-          </HText>
-          <Text size='13' className={`text-black-a70`}>
-            {details?.location} • {format(details?.startDate ?? new Date(), "MMM dd, yyyy hh:mma")} - {format(details?.endDate ?? new Date(), "MMM dd, yyyy hh:mma")}
-          </Text>
-        </View>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={<RefreshControl onRefresh={refetch} refreshing={false} />}
+      >
+        {(isLoading) && (
+          <View className={`flex-1 items-center justify-center`} style={{ gap: getMetrics(13) }}>
+            <ActivityIndicator color={"black"} />
 
-        <View
-          style={[styles.image]}
-          className={`bg-black-a10`}
-        ></View>
-
-        <Text size='15' className={`text-black-a80`}>
-          {details?.description ?? ""}
-        </Text>
-
-        <View className={`mt-3`}>
-          {state !== "OFFLINE" && (
-            <Button
-              text={config.text}
-              onPress={handleButtonPressed}
-              disabled={config.disabled}
-            />
-          )}
-
-          {state === "OFFLINE" && (
-            <Text className={`text-center text-[#FF0000]`} size='13'>
-              Unfortunately, this event is only available offline
+            <Text className={`text-black-a80 text-center`}>
+              Loading Details...
             </Text>
-          )}
-        </View>
+          </View>
+        )}
+
+        {(!isLoading && isError) && (
+          <View style={{ gap: getMetrics(13) }} className={`flex-1 items-center justify-center`}>
+            <Text className={`text-black-a80 text-center`} size="18">
+              Oops! We've encountered an error getting event details{"\n"}Please refresh
+            </Text>
+          </View>
+        )}
+
+        {(!isLoading && !isError) && (
+          <>
+            <View style={[styles.header]}>
+              <HText size='header1'>
+                {details?.name ?? ""}
+              </HText>
+              <Text size='13' className={`text-black-a70`}>
+                {details?.location} • {format(details?.startDate ?? new Date(), "MMM dd, yyyy hh:mma")} - {format(details?.endDate ?? new Date(), "MMM dd, yyyy hh:mma")}
+              </Text>
+            </View>
+
+            <View
+              style={[styles.image]}
+              className={`bg-black-a10`}
+            ></View>
+
+            <Text size='15' className={`text-black-a80`}>
+              {details?.description ?? ""}
+            </Text>
+
+            <View className={`mt-3`}>
+              {state !== "OFFLINE" && (
+                <Button
+                  text={config.text}
+                  onPress={handleButtonPressed}
+                  disabled={config.disabled}
+                />
+              )}
+
+              {state === "OFFLINE" && (
+                <Text className={`text-center text-[#FF0000]`} size='13'>
+                  Unfortunately, this event is only available offline
+                </Text>
+              )}
+            </View>
+          </>
+        )}
       </ScrollView>
     </MainLayout>
   )
