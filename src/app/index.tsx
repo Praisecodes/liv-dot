@@ -59,14 +59,14 @@ export default function Index() {
         )}
       </View>
     )
-  }, [isLoading, isError]);
+  }, [isLoading, isError, isOffline]);
 
   return (
     <MainLayout>
       <FlatList
         data={data}
         refreshControl={<RefreshControl onRefresh={refetch} refreshing={false} />}
-        renderItem={({ item }) => (isLoading || isError) ? null : (
+        renderItem={({ item }) => (isLoading || isError || isOffline) ? null : (
           <EventCard event={item} />
         )}
         keyExtractor={(_, index) => index.toString()}

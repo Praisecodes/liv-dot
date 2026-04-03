@@ -114,7 +114,7 @@ const Details = () => {
           </View>
         )}
 
-        {(!isLoading && !isError) && (
+        {(!isLoading && !isError && !isOffline) && (
           <>
             <View style={[styles.header]}>
               <HText size='header1'>
